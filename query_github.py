@@ -10,7 +10,7 @@ def create_data():
     print("Remaining API requests this hour: ", rate_limit.search.remaining)
 
 
-    query = "machine_learning+machine-learning+ML+AI+Machine Learning in:name,readme"
+    query = "machine_learning+machine-learning+ML+AI+Machine Learning+pytorch+tensorflow+pytorch-lightning+pytorchlightning+pytorch_lightning in:name,readme"
     result = g.search_repositories(query=query)
 
     REPOS = []
