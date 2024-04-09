@@ -72,7 +72,7 @@ def kmeans(REPO, k_values):
     plt.show()
 
 def PCA(REPO):
-    data = {
+    data = {Remodified query
         'n_contributors': [repo.n_contributors for repo in REPO],
         'n_stars': [repo.n_stars for repo in REPO],
         'n_openissues': [repo.n_openissues for repo in REPO],
