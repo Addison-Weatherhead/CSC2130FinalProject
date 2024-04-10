@@ -8,14 +8,7 @@ from statsmodels.formula.api import ols, sm
 from statsmodels.stats.anova import anova_lm
 
 def multivariatelinearRegression(REPO):
-    data = {
-        'n_contributors': [repo.n_contributors for repo in REPO],
-        'n_stars': [repo.n_stars for repo in REPO],
-        'n_openissues': [repo.n_openissues for repo in REPO],
-        'n_PRs': [repo.n_PRs for repo in REPO],
-        'has_workflow': [1 if repo.workflows else 0 for repo in REPO]  # 1 if workflows is not empty, else 0
-    }
-    df = pd.DataFrame(data)
+    df = preprocessing(REPO)
     
     X = df[['n_contributors', 'n_openissues', 'n_PRs', 'has_workflow']]  # independent variables
     y = df['n_stars']  # dependent variable
@@ -30,14 +23,7 @@ def multivariatelinearRegression(REPO):
     print(model.summary())
     
 def anova(REPO):
-    data = {
-        'n_contributors': [repo.n_contributors for repo in REPO],
-        'n_stars': [repo.n_stars for repo in REPO],
-        'n_openissues': [repo.n_openissues for repo in REPO],
-        'n_PRs': [repo.n_PRs for repo in REPO],
-        'has_workflow': [1 if repo.workflows else 0 for repo in REPO]  # 1 if workflows is not empty, else 0
-    }
-    df = pd.DataFrame(data)
+    df = preprocessing(REPO)
     
     model = ols('n_contributors ~ C(has_workflow)', data=df).fit()
     anova_results = anova_lm(model)
@@ -46,21 +32,12 @@ def anova(REPO):
     print(anova_results)
     
 def kmeans(REPO, k_values):
-    data = {
-        'n_contributors': [repo.n_contributors for repo in REPO],
-        'n_stars': [repo.n_stars for repo in REPO],
-        'n_openissues': [repo.n_openissues for repo in REPO],
-        'n_PRs': [repo.n_PRs for repo in REPO],
-        'has_workflow': [1 if repo.workflows else 0 for repo in REPO]  # 1 if workflows is not empty, else 0
-    }
-    df = pd.DataFrame(data)
-    scaler = StandardScaler()
-    df_normalized = scaler.fit_transform(df)
+    df = preprocessing(REPO, normalize = True)
 
     inertias = []
 
     for k in k_values:
-        model = KMeans(n_clusters=k, random_state=42).fit(df_normalized)
+        model = KMeans(n_clusters=k, random_state=42).fit(df)
         inertias.append(model.inertia_)
 
     # Plotting the Elbow Method graph
@@ -72,18 +49,9 @@ def kmeans(REPO, k_values):
     plt.show()
 
 def PCA(REPO):
-    data = {Remodified query
-        'n_contributors': [repo.n_contributors for repo in REPO],
-        'n_stars': [repo.n_stars for repo in REPO],
-        'n_openissues': [repo.n_openissues for repo in REPO],
-        'n_PRs': [repo.n_PRs for repo in REPO],
-        'has_workflow': [1 if repo.workflows else 0 for repo in REPO]  # 1 if workflows is not empty, else 0
-    }
-    df = pd.DataFrame(data)
-    scaler = StandardScaler()
-    df_normalized = scaler.fit_transform(df)
+    df = preprocessing(REPO, normalize = True)
     
-    pca = PCA().fit(df_normalized)
+    pca = PCA().fit(df)
 
     # Plotting the Cumulative Summation of the Explained Variance
     plt.figure(figsize=(8, 5))
@@ -94,3 +62,19 @@ def PCA(REPO):
     plt.xticks(range(0, len(data.keys()), 1))
     plt.grid(True)
     plt.show()
+    
+
+def preprocessing(REPO, normalize = False):
+    data = {
+        'n_contributors': [repo.n_contributors for repo in REPO],
+        'n_stars': [repo.n_stars for repo in REPO],
+        'n_openissues': [repo.n_openissues for repo in REPO],
+        'n_PRs': [repo.n_PRs for repo in REPO],
+        'has_workflow': [1 if repo.workflows else 0 for repo in REPO]  # 1 if workflows is not empty, else 0
+    }
+    df = pd.DataFrame(data)
+    if normalize:
+        scaler = StandardScaler()
+        df = scaler.fit_transform(df)
+    
+    return df
