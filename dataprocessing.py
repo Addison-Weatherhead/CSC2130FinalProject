@@ -4,14 +4,15 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
-from statsmodels.formula.api import ols, sm
+from statsmodels.formula.api import ols
+import statsmodels.api as sm
 from statsmodels.stats.anova import anova_lm
 
-def multivariatelinearRegression(REPO):
-    df = preprocessing(REPO)
+def multivariatelinearRegression(REPOS, ind_vars, dep_var):
+    df = preprocessing(REPOS)
     
-    X = df[['n_contributors', 'n_openissues', 'n_PRs', 'has_workflow']]  # independent variables
-    y = df['n_stars']  # dependent variable
+    X = df[ind_vars]  # independent variables
+    y = df[dep_var]  # dependent variable
 
     # Adding a constant to the model (intercept)
     X = sm.add_constant(X)
@@ -22,8 +23,8 @@ def multivariatelinearRegression(REPO):
     # Summary of the model
     print(model.summary())
     
-def anova(REPO):
-    df = preprocessing(REPO)
+def anova(REPOS):
+    df = preprocessing(REPOS)
     
     model = ols('n_contributors ~ C(has_workflow)', data=df).fit()
     anova_results = anova_lm(model)
@@ -31,8 +32,8 @@ def anova(REPO):
     
     print(anova_results)
     
-def kmeans(REPO, k_values):
-    df = preprocessing(REPO, normalize = True)
+def kmeans(REPOS, k_values):
+    df = preprocessing(REPOS, normalize = True)
 
     inertias = []
 
@@ -48,8 +49,8 @@ def kmeans(REPO, k_values):
     plt.title('Elbow Method For Optimal k')
     plt.show()
 
-def PCA(REPO):
-    df = preprocessing(REPO, normalize = True)
+def PCA(REPOS):
+    df = preprocessing(REPOS, normalize = True)
     
     pca = PCA().fit(df)
 
@@ -64,13 +65,15 @@ def PCA(REPO):
     plt.show()
     
 
-def preprocessing(REPO, normalize = False):
+def preprocessing(REPOS, normalize = False):
     data = {
-        'n_contributors': [repo.n_contributors for repo in REPO],
-        'n_stars': [repo.n_stars for repo in REPO],
-        'n_openissues': [repo.n_openissues for repo in REPO],
-        'n_PRs': [repo.n_PRs for repo in REPO],
-        'has_workflow': [1 if repo.workflows else 0 for repo in REPO]  # 1 if workflows is not empty, else 0
+        'n_contributors': [repo.n_contributors for repo in REPOS],
+        'n_stars': [repo.n_stars for repo in REPOS],
+        'n_openissues': [repo.n_openissues for repo in REPOS],
+        'n_PRs': [repo.n_PRs for repo in REPOS],
+        'n_workflows': [repo.n_workflows for repo in REPOS],
+        'n_workflowruns': [repo.n_workflowruns for repo in REPOS],
+        'issues_per_contributor': [0 if repo.n_contributors==0 else repo.n_openissues/repo.n_contributors for repo in REPOS],
     }
     df = pd.DataFrame(data)
     if normalize:
