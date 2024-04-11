@@ -6,12 +6,13 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 from statsmodels.formula.api import ols, sm
 from statsmodels.stats.anova import anova_lm
+from scipy.stats import mannwhitneyu
 
 def multivariatelinearRegression(REPO):
     df = preprocessing(REPO)
     
-    X = df[['n_contributors', 'n_openissues', 'n_PRs', 'has_workflow']]  # independent variables
-    y = df['n_stars']  # dependent variable
+    X = df[['n_contributors', 'n_openissues', 'n_PRs', 'n_stars']]  # independent variables
+    y = df['has_workflow']  # dependent variable
 
     # Adding a constant to the model (intercept)
     X = sm.add_constant(X)
@@ -37,7 +38,7 @@ def kmeans(REPO, k_values):
     inertias = []
 
     for k in k_values:
-        model = KMeans(n_clusters=k, random_state=42).fit(df)
+        model = KMeans(n_clusters=k).fit(df)
         inertias.append(model.inertia_)
 
     # Plotting the Elbow Method graph
@@ -63,6 +64,21 @@ def PCA(REPO):
     plt.grid(True)
     plt.show()
     
+def manwhitney(REPO, test_var):
+    df = preprocessing(REPO)
+    group1 = df[df['has_workflow'] == 1][test_var]
+    group2 = df[df['has_workflow'] == 0][test_var]
+
+
+    u_statistic, p_value = mannwhitneyu(group1, group2, alternative='two-sided')
+
+    print(f"U-statistic: {u_statistic}, P-value: {p_value}")
+
+    if p_value < 0.05:
+        print("There is a statistically significant difference between the two groups.")
+    else:
+        print("There is not a statistically significant difference between the two groups.")
+
 
 def preprocessing(REPO, normalize = False):
     data = {
