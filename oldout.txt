@@ -1,0 +1,46 @@
+Querying data... (current time:  Thu Apr 11 10:58:54 2024 )
+Remaining API requests this hour:  30
+query_str:  Machine Learning
+Num processed:  0
+Num processed:  100
+Num processed:  200
+Num processed:  300
+Num processed:  400
+Num processed:  500
+Num processed:  600
+Num processed:  700
+Num processed:  800
+query_str:  machine_learning
+Request GET /search/repositories?q=machine_learning+in%3Aname%2Creadme&page=16 failed with 403: Forbidden
+Setting next backoff to 60s
+Request GET /search/repositories?q=machine_learning+in%3Aname%2Creadme&page=29 failed with 403: Forbidden
+Setting next backoff to 60s
+query_str:  machine-learning
+Request GET /search/repositories?q=machine-learning+in%3Aname%2Creadme&page=9 failed with 403: Forbidden
+Setting next backoff to 60s
+Request GET /search/repositories?q=machine-learning+in%3Aname%2Creadme&page=23 failed with 403: Forbidden
+Setting next backoff to 60s
+query_str:  ML
+Request GET /search/repositories?q=ML+in%3Aname%2Creadme failed with 403: Forbidden
+Setting next backoff to 60s
+Num processed:  900
+Num processed:  1000
+Num processed:  1100
+Num processed:  1200
+Num processed:  1300
+Num processed:  1400
+Num processed:  1500
+query_str:  AI
+Num processed:  1600
+Num processed:  1700
+Num processed:  1800
+Num processed:  1900
+Num processed:  2000
+Request GET /repos/DefTruth/lite.ai.toolkit/actions/workflows?per_page=1 failed with 403: Forbidden
+Setting next backoff to 1163.320933s
+Num processed:  2100
+Num processed:  2200
+Num processed:  2300
+Num processed:  2400
+Data Loaded! (current time:  Thu Apr 11 12:14:50 2024 )
+Number of repos found:  2432
