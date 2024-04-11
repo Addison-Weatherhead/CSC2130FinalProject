@@ -73,7 +73,11 @@ def preprocessing(REPOS, normalize = False):
         'n_PRs': [repo.n_PRs for repo in REPOS],
         'n_workflows': [repo.n_workflows for repo in REPOS],
         'n_workflowruns': [repo.n_workflowruns for repo in REPOS],
-        'issues_per_contributor': [0 if repo.n_contributors==0 else repo.n_openissues/repo.n_contributors for repo in REPOS],
+        #'issues_per_contributor': [0 if repo.n_contributors==0 else repo.n_openissues/repo.n_contributors for repo in REPOS],
+        'n_train_workflows': [repo.n_train_workflows for repo in REPOS],
+        'n_test_workflows': [repo.n_test_workflows for repo in REPOS],
+        'n_preprocess_workflows': [repo.n_preprocess_workflows for repo in REPOS],
+        'n_clean_data_workflows': [repo.n_clean_data_workflows for repo in REPOS],
     }
     df = pd.DataFrame(data)
     if normalize:
